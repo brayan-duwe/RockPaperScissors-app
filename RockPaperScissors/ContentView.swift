@@ -45,6 +45,11 @@ struct ContentView: View {
                         }
                         Spacer()
                         Text("Score: \(score)")
+                            .foregroundStyle(Color.white)
+                            .font(.headline.weight(.bold))
+                            .frame(width: 110, height: 30)
+                            .background(Color.cyan)
+                            .clipShape(.capsule)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background {
