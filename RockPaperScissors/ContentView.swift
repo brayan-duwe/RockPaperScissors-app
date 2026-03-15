@@ -4,6 +4,11 @@ struct ContentView: View {
     @State private var choices = ["Rock", "Paper", "Scissors"].shuffled()
     @State private var winTheRound = false
     @State private var score = 0
+    @State private var scoreTitle = ""
+    @State private var scoreMessage = ""
+    @State private var showingScore = false
+    
+    
     
     var body: some View {
         NavigationStack {
@@ -13,11 +18,6 @@ struct ContentView: View {
                     .ignoresSafeArea()
                 
                 VStack {
-                    Spacer()
-                    Spacer()
-                    Spacer()
-                    Spacer()
-
                     
                     Image(choices[0])
                     Text(choices[0])
@@ -33,23 +33,29 @@ struct ContentView: View {
                                     choiceTapped(number)
                                 } label: {
                                     Image(choices[number])
-                                        .frame(width: 20, height: 250)
-                                        .padding(.horizontal, 46)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 120, height: 300)
+                                } .alert(scoreTitle, isPresented: $showingScore){
+                                    Button("Continue", action: askQuestion)
+                                } message: {
+                                    Text(scoreMessage)
                                 }
                             }
-                            
                         }
                         Spacer()
                         Text("Score: \(score)")
                     }
-                    .frame(maxWidth: .infinity)
-                    .background(.regularMaterial)
-                    
-                    
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background {
+                        RoundedRectangle(cornerRadius: 48, style: .continuous)
+                            .fill(.regularMaterial)
+                            .ignoresSafeArea(edges: .bottom)
+                    }
                 }
-                
                 .navigationTitle("Rock, Paper, Scissors")
                 .toolbarColorScheme(.dark, for: .navigationBar)
+                .padding(.top, 50)
             }
         }
     }
@@ -61,10 +67,93 @@ struct ContentView: View {
         }
     }
     
+    func askQuestion() {
+        choices.shuffle()
+        winTheRound.toggle()
+    }
+    
     func choiceTapped(_ number: Int) {
-
+        let appChoice = choices[0]
+        let playerChoice = choices[number]
+        
+        switch appChoice {
+        case "Rock":
+            if winTheRound {
+                if playerChoice == "Paper" {
+                    score += 1
+                    scoreTitle = "Correct"
+                    scoreMessage = "Your score is: \(score)"
+                } else {
+                    score -= 1
+                    scoreTitle = "Wrong"
+                    scoreMessage = "The correct answer is: Paper"
+                }
+            } else {
+                if playerChoice != "Paper" {
+                    score += 1
+                    scoreTitle = "Correct"
+                    scoreMessage = "Your score is: \(score)"
+                } else {
+                    score -= 1
+                    scoreTitle = "Wrong"
+                    scoreMessage = "The correct answer is: Scissors or Rock"
+                }
+            }
+            
+        case "Paper":
+            if winTheRound {
+                if playerChoice == "Scissors" {
+                    score += 1
+                    scoreTitle = "Correct"
+                    scoreMessage = "Your score is: \(score)"
+                } else {
+                    score -= 1
+                    scoreTitle = "Wrong"
+                    scoreMessage = "The correct answer is: Scissors"
+                }
+            } else {
+                if playerChoice != "Scissors" {
+                    score += 1
+                    scoreTitle = "Correct"
+                    scoreMessage = "Your score is: \(score)"
+                } else {
+                    score -= 1
+                    scoreTitle = "Wrong"
+                    scoreMessage = "The correct answer is: Rock or Paper"
+                }
+            }
+            
+        case "Scissors":
+            if winTheRound {
+                if playerChoice == "Rock" {
+                    score += 1
+                    scoreTitle = "Correct"
+                    scoreMessage = "Your score is: \(score)"
+                } else {
+                    score -= 1
+                    scoreTitle = "Wrong"
+                    scoreMessage = "The correct answer is: Rock"
+                }
+            } else {
+                if playerChoice != "Rock" {
+                    score += 1
+                    scoreTitle = "Correct"
+                    scoreMessage = "Your score is: \(score)"
+                } else {
+                    score -= 1
+                    scoreTitle = "Wrong"
+                    scoreMessage = "The correct answer is: Paper or Scissors"
+                }
+            }
+            
+        default:
+            break
+        }
+        
+        showingScore = true
     }
 }
+
 
 #Preview {
     ContentView()
