@@ -7,7 +7,8 @@ struct ContentView: View {
     @State private var scoreTitle = ""
     @State private var scoreMessage = ""
     @State private var showingScore = false
-    
+    @State private var round = 0
+    @State private var reset = false
     
     
     var body: some View {
@@ -40,6 +41,9 @@ struct ContentView: View {
                                     Button("Continue", action: askQuestion)
                                 } message: {
                                     Text(scoreMessage)
+                                }
+                                .alert("The game ended. Your score: \(score)", isPresented: $reset){
+                                    Button("Restart game", action: resetGame)
                                 }
                             }
                         }
@@ -75,6 +79,11 @@ struct ContentView: View {
     func askQuestion() {
         choices.shuffle()
         winTheRound.toggle()
+        if round == 10 {
+            showingScore = false
+            reset = true
+            round = 0
+        }
     }
     
     func choiceTapped(_ number: Int) {
@@ -89,7 +98,6 @@ struct ContentView: View {
                     scoreTitle = "Correct"
                     scoreMessage = "Your score is: \(score)"
                 } else {
-                    score -= 1
                     scoreTitle = "Wrong"
                     scoreMessage = "The correct answer is: Paper"
                 }
@@ -99,7 +107,6 @@ struct ContentView: View {
                     scoreTitle = "Correct"
                     scoreMessage = "Your score is: \(score)"
                 } else {
-                    score -= 1
                     scoreTitle = "Wrong"
                     scoreMessage = "The correct answer is: Scissors or Rock"
                 }
@@ -112,7 +119,6 @@ struct ContentView: View {
                     scoreTitle = "Correct"
                     scoreMessage = "Your score is: \(score)"
                 } else {
-                    score -= 1
                     scoreTitle = "Wrong"
                     scoreMessage = "The correct answer is: Scissors"
                 }
@@ -122,7 +128,6 @@ struct ContentView: View {
                     scoreTitle = "Correct"
                     scoreMessage = "Your score is: \(score)"
                 } else {
-                    score -= 1
                     scoreTitle = "Wrong"
                     scoreMessage = "The correct answer is: Rock or Paper"
                 }
@@ -135,7 +140,6 @@ struct ContentView: View {
                     scoreTitle = "Correct"
                     scoreMessage = "Your score is: \(score)"
                 } else {
-                    score -= 1
                     scoreTitle = "Wrong"
                     scoreMessage = "The correct answer is: Rock"
                 }
@@ -145,20 +149,22 @@ struct ContentView: View {
                     scoreTitle = "Correct"
                     scoreMessage = "Your score is: \(score)"
                 } else {
-                    score -= 1
                     scoreTitle = "Wrong"
                     scoreMessage = "The correct answer is: Paper or Scissors"
                 }
             }
-            
         default:
             break
         }
-        
         showingScore = true
+        round += 1
+    }
+    
+    func resetGame() {
+        score = 0
+        askQuestion()
     }
 }
-
 
 #Preview {
     ContentView()
